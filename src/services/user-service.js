@@ -52,6 +52,23 @@ class UserService{
             throw error;
         }
     }
+    async isAuthenticated(token){
+        try {
+            const response = this.verifyToken(token);
+            if(!response){
+                throw {error: 'Invalid Token'};
+            }
+            const user = this.userRepository.getByID(response.id);
+            if(!user){
+                throw {error: 'No user with the corresponding Token exists'};
+            }
+            return user.id;
+            
+        } catch (error) {
+            console.log("Something went wrong in password verification");
+            throw error;
+        }
+    }
     async signIn(email, plainpassword){
         try {
             //step1: fetch the user using email
