@@ -2,6 +2,7 @@ const UserRepository = require('../repository/user-repository');
 const jwt = require('jsonwebtoken');
 const {JWT_KEY} = require('../config/serverConfig');
 const bcrypt = require('bcrypt');
+const {User, Role} = require('../models/index');
 class UserService{
     constructor(){
         this.userRepository = new UserRepository();
@@ -82,6 +83,14 @@ class UserService{
             //step3: if password matches, create a token and send it to the user
             const newJwt = this.createToken({email:email, id:user.id});
             return newJwt;
+        } catch (error) {
+            console.log("Something went wrong in SignIn process at user-service layer");
+            throw error;
+        }
+    }
+    async isAdmin(userId){
+        try {
+            return await this.userRepository.isAdmin(userId);
         } catch (error) {
             console.log("Something went wrong in SignIn process at user-service layer");
             throw error;
